@@ -1664,23 +1664,22 @@ static struct ndpi_proto packet_processing(struct ndpi_workflow * workflow,
 
     enough_packets |= ndpi_flow->fail_with_unknown;
     if(enough_packets || (flow->detected_protocol.app_protocol != NDPI_PROTOCOL_UNKNOWN)) {
-      if((!enough_packets)
-	 && ndpi_extra_dissection_possible(workflow->ndpi_struct, ndpi_flow))
-	; /* Wait for further metadata */
-      else {
-	/* New protocol detected or give up */
-	flow->detection_completed = 1;
+            if((!enough_packets)&& ndpi_extra_dissection_possible(workflow->ndpi_struct, ndpi_flow))
+                    ; /* Wait for further metadata */
+            else {
+                /* New protocol detected or give up */
+                flow->detection_completed = 1;
 
-	if(flow->detected_protocol.app_protocol == NDPI_PROTOCOL_UNKNOWN) {
-	  u_int8_t proto_guessed;
+                if(flow->detected_protocol.app_protocol == NDPI_PROTOCOL_UNKNOWN) {
+                  u_int8_t proto_guessed;
 
-	  flow->detected_protocol = ndpi_detection_giveup(workflow->ndpi_struct, flow->ndpi_flow,
-							  &proto_guessed);
-	  if(proto_guessed) workflow->stats.guessed_flow_protocols++;
-	}
+                  flow->detected_protocol = ndpi_detection_giveup(workflow->ndpi_struct, flow->ndpi_flow,
+                              &proto_guessed);
+                  if(proto_guessed) workflow->stats.guessed_flow_protocols++;
+                }
 
-	process_ndpi_collected_info(workflow, flow);
-      }
+        	      process_ndpi_collected_info(workflow, flow);
+            }
     }
     malloc_size_stats = 0;
   }
